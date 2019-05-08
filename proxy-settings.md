@@ -20,7 +20,7 @@ Fork https://github.com/pivotal-cf/pks-kubo-release and checkout appropriate bra
 Create and upload release
     
     bosh create-release --force --tarball /tmp/pks-kubo-release-modified.tgz
-    bosh -e kirklab upload-release /tmp/pks-kubo-release-modified.tgz --fix
+    bosh -e <bosh_env> upload-release /tmp/pks-kubo-release-modified.tgz --fix
     
 Copy the manifest and update with modified release information
     sudo cp /var/tempest/workspaces/default/deployments/pivotal-container-service-d2b7297f54526b31869b.yml /tmp/pks-proxy.yml
@@ -52,9 +52,9 @@ Update manifest with modified release information
     :%s/35.1.0/35.1.0+dev.1/g
 
 ## Apply these changes
-    bosh -e kirklab -d pivotal-container-service-d2b7297f54526b31869b deploy /tmp/pks-proxy.yml
+    bosh -e <bosh_env> -d <pivotal-container-service-deployment> deploy /tmp/pks-proxy.yml
 
 ## Create a test cluster
-    pks login -a api.pks.kirklab.io --ca-cert ~/Work/homelab/ca/pks.crt -u bkirkland
-    pks create-cluster tibanna --external-hostname tibanna.kirklab.io --plan small
-    watch pks cluster tibanna
+    pks login -a api.pks.<pks-dns>.io --ca-cert ~/ca/pks.crt -u <pks-user>
+    pks create-cluster <cluster-name> --external-hostname <cluster-url> --plan small
+    watch pks cluster <cluster-name>
