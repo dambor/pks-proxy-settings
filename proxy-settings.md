@@ -3,6 +3,7 @@
 Release version reference:
 * PKS 1.3.6 uses kubo 0.25.12 and docker 35.1.0
 * PKS 1.4.0 uses kubo 0.31.0 and docker 35.1.0
+
 Fork https://github.com/pivotal-cf/pks-kubo-release and checkout appropriate branch.
     cd ~
     git clone https://github.com/bkirkware/pks-kubo-release.git
