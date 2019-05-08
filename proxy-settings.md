@@ -5,10 +5,11 @@ Release version reference:
 * PKS 1.4.0 uses kubo 0.31.0 and docker 35.1.0
 
 Fork https://github.com/pivotal-cf/pks-kubo-release and checkout appropriate branch.
-    `cd ~`
-    `git clone https://github.com/bkirkware/pks-kubo-release.git`
-    `cd pks-kubo-release`
-    `git checkout v0.25.12`
+
+    `cd ~
+    git clone https://github.com/bkirkware/pks-kubo-release.git
+    cd pks-kubo-release
+    git checkout v0.25.12`
 
 `vi jobs/kubelet/templates/bin/kubelet_ctl.erb`
     
@@ -31,6 +32,7 @@ Copy the manifest and update with modified release information
     
 ## Modify docker release
 Pull down docker-boshrelease and docker swarm code. Checkout branch v35.1.0 of docker-boshrelease.
+
     cd ~
     https://github.com/cloudfoundry-incubator/docker-boshrelease.git
     cd docker-boshrelease
@@ -39,12 +41,15 @@ Pull down docker-boshrelease and docker swarm code. Checkout branch v35.1.0 of d
     rm -r swarm
     git clone https://github.com/docker/swarm.git
     cd ../../..
+
 `vi jobs/docker/templates/bin/job_properties.sh.erb`
+
     export HTTP_PROXY="squid.kirklab.io:3128"
     export HTTPS_PROXY="squid.kirklab.io:3128"
     export http_proxy="squid.kirklab.io:3128"
     export https_proxy="squid.kirklab.io:3128"
     export no_proxy="localhost,127.0.0.1,harbor.pks.kirklab.io,169.254.169.254,local,svc.cluster.local,192.168.192.0/20,172.16.0.0/16,internal,master.cfcr.internal"
+    
 Create and upload release
     bosh create-release --force --tarball /tmp/docker-modified.tgz
     bosh -e kirklab upload-release /tmp/docker-modified.tgz --fix
