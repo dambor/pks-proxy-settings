@@ -6,18 +6,18 @@ Release version reference:
 
 Fork https://github.com/pivotal-cf/pks-kubo-release and checkout appropriate branch.
 
-    `cd ~
+    cd ~
     git clone https://github.com/bkirkware/pks-kubo-release.git
     cd pks-kubo-release
-    git checkout v0.25.12`
+    git checkout v0.25.12
 
-`vi jobs/kubelet/templates/bin/kubelet_ctl.erb`
+    vi jobs/kubelet/templates/bin/kubelet_ctl.erb
     
     export HTTP_PROXY="<proxy url>"
     export HTTPS_PROXY="squid.kirklab.io:3128"
     export http_proxy="squid.kirklab.io:3128"
     export https_proxy="squid.kirklab.io:3128"
-    export no_proxy="localhost,127.0.0.1,harbor.pks.kirklab.io,169.254.169.254,local,svc.cluster.local,192.168.192.0/20,172.16.0.0/16,internal,master.cfcr.internal"
+    export no_proxy="localhost,127.0.0.1,harbor.pks.<domain>,169.254.169.254,local,svc.cluster.local,192.168.192.0/20,172.16.0.0/16,internal,master.cfcr.internal"
     
 Create and upload release
     
@@ -25,7 +25,8 @@ Create and upload release
     bosh -e <bosh_env> upload-release /tmp/pks-kubo-release-modified.tgz --fix
     
 Copy the manifest and update with modified release information
-    sudo cp /var/tempest/workspaces/default/deployments/pivotal-container-service-d2b7297f54526b31869b.yml /tmp/pks-proxy.yml
+
+    sudo cp /var/tempest/workspaces/default/deployments/<pivotal-container-service-deployment /tmp/pks-proxy.yml
     sudo chown ubuntu:ubuntu /tmp/pks-proxy.yml
     vi /tmp/pks-proxy.yml
     :%s/0.25.12/0.25.0+dev.1/g
@@ -42,22 +43,26 @@ Pull down docker-boshrelease and docker swarm code. Checkout branch v35.1.0 of d
     git clone https://github.com/docker/swarm.git
     cd ../../..
 
-`vi jobs/docker/templates/bin/job_properties.sh.erb`
+    vi jobs/docker/templates/bin/job_properties.sh.erb
 
     export HTTP_PROXY="squid.kirklab.io:3128"
     export HTTPS_PROXY="squid.kirklab.io:3128"
     export http_proxy="squid.kirklab.io:3128"
     export https_proxy="squid.kirklab.io:3128"
-    export no_proxy="localhost,127.0.0.1,harbor.pks.kirklab.io,169.254.169.254,local,svc.cluster.local,192.168.192.0/20,172.16.0.0/16,internal,master.cfcr.internal"
+    export no_proxy="localhost,127.0.0.1,harbor.pks.<domain>,169.254.169.254,local,svc.cluster.local,192.168.192.0/20,172.16.0.0/16,internal,master.cfcr.internal"
     
 Create and upload release
+
     bosh create-release --force --tarball /tmp/docker-modified.tgz
-    bosh -e kirklab upload-release /tmp/docker-modified.tgz --fix
+    bosh -e <bosh-env> upload-release /tmp/docker-modified.tgz --fix
+    
 Update manifest with modified release information
+
     vi /tmp/pks-proxy.yml
     :%s/35.1.0/35.1.0+dev.1/g
 
 ## Apply these changes
+
     bosh -e <bosh_env> -d <pivotal-container-service-deployment> deploy /tmp/pks-proxy.yml
 
 ## Create a test cluster
